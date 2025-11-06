@@ -1,8 +1,7 @@
-import pytest
 import yaml
 from homeassistant.core import HomeAssistant
 
-from custom_components.unban_ip.const import DOMAIN, IP_BANS_FILE
+from custom_components.unban_ip.const import IP_BANS_FILE
 
 
 @pytest.fixture
@@ -42,7 +41,7 @@ async def test_unban_ip_service(hass: HomeAssistant, tmp_path, monkeypatch, ban_
 
     # Call service
     await hass.services.async_call(
-        DOMAIN, "unban_ip", {"ip_address": "192.168.1.25"}, blocking=True
+        TEST_DOMAIN, "unban_ip", {"ip_address": "192.168.1.25"}, blocking=True
     )
 
     # Check file
