@@ -1,0 +1,9 @@
+{
+  "domain": "unban_ip",
+  "name": "Unban IP",
+  "version": "1.0.0",
+  "requirements": [],
+  "documentation": "https://github.com/PavelD/hacs-unban_ip/",
+  "dependencies": ["http"],
+  "codeowners": ["@PavelD"]
+}
