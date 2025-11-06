@@ -1,0 +1,5 @@
+# requirements_tests.txt
+# Add testing dependencies here
+
+pytest
+pytest-cov
