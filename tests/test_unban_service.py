@@ -25,6 +25,11 @@ def ban_file(tmp_path):
     return file_path
 
 
+async def test_async_setup(hass):
+    result = await unban.async_setup(hass, {})
+    assert result is True
+
+
 async def test_unban_ip_service(hass: HomeAssistant, tmp_path, monkeypatch, ban_file):
     """Test that unban_ip service removes the IP from file and in-memory bans."""
 
@@ -36,9 +41,6 @@ async def test_unban_ip_service(hass: HomeAssistant, tmp_path, monkeypatch, ban_
         banned = {"192.168.1.25": "ban"}
 
     hass.data["http"] = type("dummy_http", (), {"_ban": DummyBan()})()
-
-    # Setup service
-    assert setup(hass, {}) is True
 
     # Call service
     await hass.services.async_call(

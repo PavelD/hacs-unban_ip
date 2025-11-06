@@ -8,7 +8,7 @@ from .const import DOMAIN, IP_BANS_FILE
 _LOGGER = logging.getLogger(__name__)
 
 
-def setup(hass: HomeAssistant, config: ConfigType):
+async def async_setup(hass: HomeAssistant, config: ConfigType):
     """Set up the Unban IP service."""
 
     def handle_unban_ip(call):
