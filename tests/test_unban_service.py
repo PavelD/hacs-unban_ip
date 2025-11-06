@@ -1,3 +1,4 @@
+import pytest
 import yaml
 from homeassistant.core import HomeAssistant
 
@@ -23,7 +24,6 @@ def ban_file(tmp_path):
     return file_path
 
 
-@pytest.mark.asyncio
 async def test_unban_ip_service(hass: HomeAssistant, tmp_path, monkeypatch, ban_file):
     """Test that unban_ip service removes the IP from file and in-memory bans."""
 
