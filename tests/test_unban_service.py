@@ -1,10 +1,8 @@
 import pytest
-import os
 import yaml
 from homeassistant.core import HomeAssistant
-from homeassistant.setup import async_setup_component
 
-from custom_components.unban_ip import DOMAIN, setup
+from custom_components.unban_ip.const import DOMAIN, IP_BANS_FILE
 
 @pytest.fixture
 def hass(loop, hass):
@@ -16,8 +14,8 @@ def ban_file(tmp_path):
     """Create a temporary ip_bans.yaml file."""
     file_path = tmp_path / "ip_bans.yaml"
     data = [
-        {"ip_address": "192.168.5.104", "banned_at": "2025-11-06T21:42:12"},
-        {"ip_address": "192.168.5.105", "banned_at": "2025-11-06T21:43:00"},
+        {"ip_address": "192.168.1.25", "banned_at": "2025-11-06T21:42:12"},
+        {"ip_address": "192.168.2.26", "banned_at": "2025-11-06T21:43:00"},
     ]
     with open(file_path, "w") as f:
         yaml.safe_dump(data, f)
@@ -32,7 +30,7 @@ async def test_unban_ip_service(hass: HomeAssistant, tmp_path, monkeypatch, ban_
 
     # Create dummy in-memory _ban object
     class DummyBan:
-        banned = {"192.168.5.104": "ban"}
+        banned = {"192.168.1.25": "ban"}
 
     hass.data["http"] = type("dummy_http", (), {"_ban": DummyBan()})()
 
@@ -43,14 +41,14 @@ async def test_unban_ip_service(hass: HomeAssistant, tmp_path, monkeypatch, ban_
     await hass.services.async_call(
         DOMAIN,
         "unban_ip",
-        {"ip_address": "192.168.5.104"},
+        {"ip_address": "192.168.1.25"},
         blocking=True
     )
 
     # Check file
     with open(ban_file, "r") as f:
         data = yaml.safe_load(f)
-    assert all(b["ip_address"] != "192.168.5.104" for b in data)
+    assert all(b["ip_address"] != "192.168.1.25" for b in data)
 
     # Check in-memory
-    assert "192.168.5.104" not in hass.data["http"]._ban.banned
+    assert "192.168.1.25" not in hass.data["http"]._ban.banned

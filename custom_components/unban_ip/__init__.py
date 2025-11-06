@@ -3,11 +3,9 @@ import os
 import yaml
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.typing import ConfigType
+from .const import DOMAIN, IP_BANS_FILE
 
 _LOGGER = logging.getLogger(__name__)
-
-DOMAIN = "unban_ip"
-IP_BANS_FILE = "ip_bans.yaml"
 
 def setup(hass: HomeAssistant, config: ConfigType):
     """Set up the Unban IP service."""
