@@ -26,7 +26,9 @@ def ban_file(tmp_path):
     return file_path
 
 
-async def test_unban_ip_service(hass: HomeAssistant, setup_integration, tmp_path, monkeypatch, ban_file):
+async def test_unban_ip_service(
+    hass: HomeAssistant, setup_integration, tmp_path, monkeypatch, ban_file
+):
     """Test that unban_ip service removes the IP from file and in-memory bans."""
 
     # Mock hass.config.path to return our tmp_path file
