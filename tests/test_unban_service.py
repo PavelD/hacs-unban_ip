@@ -2,7 +2,7 @@ import pytest
 import yaml
 from homeassistant.core import HomeAssistant
 
-from custom_components.unban_ip import setup
+from custom_components.unban_ip import async_setup
 from custom_components.unban_ip.const import IP_BANS_FILE
 
 
@@ -26,7 +26,7 @@ def ban_file(tmp_path):
 
 
 async def test_async_setup(hass):
-    result = await unban.async_setup(hass, {})
+    result = await async_setup(hass, {})
     assert result is True
 
 
