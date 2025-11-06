@@ -1,21 +1,22 @@
 import pytest
 import yaml
 from homeassistant.core import HomeAssistant
-
 from custom_components.unban_ip import async_setup
-from custom_components.unban_ip.const import IP_BANS_FILE
+from custom_components.unban_ip.const import DOMAIN, IP_BANS_FILE
 
 
 @pytest.fixture
-def hass(loop, hass):
-    """Fixture for Home Assistant instance."""
+async def setup_integration(hass):
+    """Setup the integration and register the service."""
+    await async_setup(hass, {})
+    await hass.async_block_till_done()
     return hass
 
 
 @pytest.fixture
 def ban_file(tmp_path):
     """Create a temporary ip_bans.yaml file."""
-    file_path = tmp_path / "ip_bans.yaml"
+    file_path = tmp_path / IP_BANS_FILE
     data = [
         {"ip_address": "192.168.1.25", "banned_at": "2025-11-06T21:42:12"},
         {"ip_address": "192.168.2.26", "banned_at": "2025-11-06T21:43:00"},
@@ -25,12 +26,7 @@ def ban_file(tmp_path):
     return file_path
 
 
-async def test_async_setup(hass):
-    result = await async_setup(hass, {})
-    assert result is True
-
-
-async def test_unban_ip_service(hass: HomeAssistant, tmp_path, monkeypatch, ban_file):
+async def test_unban_ip_service(hass: HomeAssistant, setup_integration, tmp_path, monkeypatch, ban_file):
     """Test that unban_ip service removes the IP from file and in-memory bans."""
 
     # Mock hass.config.path to return our tmp_path file
@@ -42,15 +38,17 @@ async def test_unban_ip_service(hass: HomeAssistant, tmp_path, monkeypatch, ban_
 
     hass.data["http"] = type("dummy_http", (), {"_ban": DummyBan()})()
 
-    # Call service
+    # --- Call the registered service ---
     await hass.services.async_call(
-        TEST_DOMAIN, "unban_ip", {"ip_address": "192.168.1.25"}, blocking=True
+        DOMAIN, "unban_ip", {"ip_address": "192.168.1.25"}, blocking=True
     )
 
-    # Check file
+    await hass.async_block_till_done()
+
+    # --- Check file contents ---
     with open(ban_file, "r") as f:
         data = yaml.safe_load(f)
     assert all(b["ip_address"] != "192.168.1.25" for b in data)
 
-    # Check in-memory
+    # --- Check in-memory removal ---
     assert "192.168.1.25" not in hass.data["http"]._ban.banned
