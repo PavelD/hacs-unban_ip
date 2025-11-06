@@ -2,7 +2,7 @@ import pytest
 import yaml
 from homeassistant.core import HomeAssistant
 
-from custom_components import setup
+from custom_components.unban_ip import setup
 from custom_components.unban_ip.const import IP_BANS_FILE
 
 
