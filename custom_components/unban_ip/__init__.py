@@ -1,4 +1,5 @@
 """Init file for Unban IP custom integration."""
+
 import logging
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.typing import ConfigType

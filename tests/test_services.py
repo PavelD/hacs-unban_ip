@@ -20,7 +20,9 @@ async def test_service_registration(hass: HomeAssistant):
 
 
 @pytest.mark.asyncio
-async def test_unban_ip_removes_from_file_and_memory(hass: HomeAssistant, tmp_path, monkeypatch, ban_file):
+async def test_unban_ip_removes_from_file_and_memory(
+    hass: HomeAssistant, tmp_path, monkeypatch, ban_file
+):
     """Test that unban_ip removes the IP from the file and memory."""
 
     # Mock hass.config.path to return the temp file path

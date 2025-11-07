@@ -1,4 +1,5 @@
 """Define services for Unban IP integration."""
+
 import logging
 import os
 import yaml

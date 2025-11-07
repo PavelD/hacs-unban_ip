@@ -2,6 +2,7 @@ import pytest
 
 pytest_plugins = "pytest_homeassistant_custom_component"
 
+
 @pytest.fixture
 def ban_file(tmp_path):
     """Create a temporary ip_bans.yaml file."""
