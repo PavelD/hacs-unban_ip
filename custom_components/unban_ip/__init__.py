@@ -1,0 +1,32 @@
+"""Init file for Unban IP custom integration."""
+
+import logging
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.typing import ConfigType
+
+from .const import DOMAIN
+from .services import async_setup_services, async_unload_services
+
+_LOGGER = logging.getLogger(__name__)
+
+
+async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
+    """Set up the Unban IP integration."""
+    await async_setup_services(hass)
+    _LOGGER.info("Unban IP integration setup completed.")
+    return True
+
+
+async def async_unload_entry(hass: HomeAssistant, entry) -> bool:
+    """Handle unloading of the integration."""
+    await async_unload_services(hass)
+    _LOGGER.info("Unban IP integration unloaded.")
+    return True
+
+
+async def async_reload_entry(hass: HomeAssistant, entry):
+    """Handle reload of the integration (without restart)."""
+    _LOGGER.info("Reloading Unban IP integration...")
+    await async_unload_services(hass)
+    await async_setup_services(hass)
+    _LOGGER.info("Reload complete.")
